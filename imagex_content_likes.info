@@ -2,6 +2,7 @@ name = ImageX Content Likes
 description = Allows content to be liked a la Facebook
 core = 7.x
 package = ImageX
+php = 5.2.4
 version = 7.x-1.0-dev
 project = imagex_content_likes
 dependencies[] = flag
