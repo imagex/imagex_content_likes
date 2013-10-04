@@ -1,0 +1,64 @@
+<?php
+/**
+ * @file
+ * Code for the ImageX Content Likes feature.
+ */
+
+include_once 'imagex_content_likes.features.inc';
+
+/**
+ * Implements hook_permission()
+ *
+ * Add custom permission to turn off "Who Liked This" node tab
+ */
+function imagex_content_likes_permission() {
+  return array(
+    'view liked counter' => array(
+      'title' => t('View liked counter'),
+    ),
+    'view who liked this node tab' => array(
+      'title' => t('View who liked this node tab'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter()
+ *
+ * Make flag look at our flag.tpl.php
+ */
+function imagex_content_likes_theme_registry_alter(&$theme_registry) {
+  $theme_registry['flag']['path'] = drupal_get_path('module', 'imagex_content_likes');
+}
+
+/**
+ * Implements template_preprocess_flag()
+ *
+ * Add a new $flag_counter text/link
+ *
+ * Example use in flag.tpl.php:
+ * <?php if (!empty($flag_counter)) { ?>
+ *   (<span class="flag-counter"><?php echo $flag_counter; ?></span>)
+ * <?php }; ?>
+ */
+function imagex_content_likes_preprocess_flag(&$variables) {
+  global $user;
+
+  // vars
+  $flag = &$variables['flag'];
+  $action = $variables['action'];
+  $entity_id = $variables['entity_id'];
+  $variables['flag_counter'] = '';
+  
+  //check the flag in question & permissions
+  if ($flag->name == 'imagex_node_like' && user_access('view liked counter')) {
+    $flag_counter_raw = $flag->get_count($entity_id);
+    $flag_counter = format_plural($flag_counter_raw, '1 like', '@count likes');
+    
+    //link to node/%/likes?
+    if (user_access('view who liked this node tab') && $flag_counter_raw > 0) {
+      $flag_counter = l($flag_counter, 'node/'. $entity_id .'/likes', array('attributes' => array('title' => t('View who liked this'))));
+    }
+    $variables['flag_counter'] = $flag_counter;
+  }
+}
