@@ -1,0 +1,17 @@
+name = ImageX Content Likes
+description = Allows content to be liked a la Facebook
+core = 7.x
+package = ImageX
+php = 5.2.4
+version = 7.x-1.0-dev
+project = imagex_content_likes
+dependencies[] = flag
+dependencies[] = views
+dependencies[] = views_content
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[flag][] = imagex_node_like
+features[views_view][] = imagex_most_liked_content
+features[views_view][] = imagex_who_liked_this
+features_exclude[dependencies][ctools] = ctools
+project path = profiles/imagex_installkit/modules/imagex/modules
