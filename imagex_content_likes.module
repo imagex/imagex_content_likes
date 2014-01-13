@@ -23,6 +23,23 @@ function imagex_content_likes_permission() {
 }
 
 /**
+ * Implements hook_views_access_callbacks().
+ */
+function imagex_content_likes_views_access_callbacks() {
+  return array(
+    'imagex_content_likes_user_has_access' => t('ImageX Content Likes: Access - permissions and likes'),
+  );
+}
+
+/**
+ * Views Access Callback.
+ */
+function imagex_content_likes_user_has_access($nid) {
+  $num_of_likes = imagex_content_likes_get_flag_counts_by_entity($nid);
+  return user_access('view who liked this node tab') && $num_of_likes > 0;
+}
+
+/**
  * Implements hook_theme_registry_alter()
  *
  * Make flag look at our flag.tpl.php
@@ -61,4 +78,19 @@ function imagex_content_likes_preprocess_flag(&$variables) {
     }
     $variables['flag_counter'] = $flag_counter;
   }
+}
+
+function imagex_content_likes_get_flag_counts_by_entity($entity_id) {
+  $flag_counts = &drupal_static(__FUNCTION__, array());
+  if (!isset($flag_counts[$entity_id])) {
+    $flag = flag_get_flag('imagex_node_like');
+    $flag_counts[$entity_id] = db_select('flag_counts', 'fc')
+      ->fields('fc', array('flagging_id'))
+      ->condition('fid', $flag->fid)
+      ->condition('entity_id', $entity_id)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+  return $flag_counts[$entity_id];
 }
