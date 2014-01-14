@@ -222,8 +222,8 @@ function imagex_content_likes_views_default_views() {
   /* Display: Who Liked This Node Page */
   $handler = $view->new_display('page', 'Who Liked This Node Page', 'page_1');
   $handler->display->display_options['defaults']['access'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['access']['perm'] = 'view who liked this node tab';
+  $handler->display->display_options['access']['type'] = 'views_access_callback';
+  $handler->display->display_options['access']['views_access_callback'] = 'imagex_content_likes_user_has_access';
   $handler->display->display_options['path'] = 'node/%/likes';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Who Liked This';
