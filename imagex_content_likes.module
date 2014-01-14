@@ -80,6 +80,14 @@ function imagex_content_likes_preprocess_flag(&$variables) {
   }
 }
 
+/**
+ * Retrieves the number of likes for the specified entity.
+ *
+ * @param int $entity_id
+ *   The entity to retrieve the number of likes for.
+ * @return mixed
+ *   The total number of likes.
+ */
 function imagex_content_likes_get_flag_counts_by_entity($entity_id) {
   $flag_counts = &drupal_static(__FUNCTION__, array());
   if (!isset($flag_counts[$entity_id])) {
